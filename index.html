@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Touch Typing Mastery</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Touch Typing Mastery</h1>
+
+        <div class="controls">
+            <div>
+                <label for="game-type">Game Type:</label>
+                <select id="game-type">
+                    <option value="key">Key Mode</option>
+                    <option value="word">Word Mode</option>
+                    <option value="sentence">Sentence Mode</option>
+                    <option value="paragraph">Paragraph Mode</option>
+                </select>
+            </div>
+            <div>
+                <label for="difficulty">Difficulty:</label>
+                <select id="difficulty">
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+            <div>
+                <label for="duration">Time Limit:</label>
+                <select id="duration">
+                    <option value="free">Free Run</option>
+                    <option value="30">30 seconds</option>
+                    <option value="60">60 seconds</option>
+                    <option value="120">2 minutes</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="button-row">
+            <button id="startButton">Start</button>
+            <button id="stopButton" disabled>Stop</button>
+        </div>
+
+        <div class="typing-area" id="typingArea"></div>
+        <div class="timer" id="timer"></div>
+
+        <div class="keyboard-container" id="keyboard">
+            <!-- Row 1: Number row -->
+            <div class="keyboard-row">
+                <div class="key key-symbol">`</div>
+                <div class="key key-symbol">1</div>
+                <div class="key key-symbol">2</div>
+                <div class="key key-symbol">3</div>
+                <div class="key key-symbol">4</div>
+                <div class="key key-symbol">5</div>
+                <div class="key key-symbol">6</div>
+                <div class="key key-symbol">7</div>
+                <div class="key key-symbol">8</div>
+                <div class="key key-symbol">9</div>
+                <div class="key key-symbol">0</div>
+                <div class="key key-symbol">-</div>
+                <div class="key key-symbol">=</div>
+                <div class="key key-wide" data-key="Delete">Del</div>
+            </div>
+            
+            <!-- Row 2: QWERTY row -->
+            <div class="keyboard-row">
+                <div class="key key-one-half" data-key="Tab">Tab</div>
+                <div class="key key-letter">Q</div>
+                <div class="key key-letter">W</div>
+                <div class="key key-letter">E</div>
+                <div class="key key-letter">R</div>
+                <div class="key key-letter">T</div>
+                <div class="key key-letter">Y</div>
+                <div class="key key-letter">U</div>
+                <div class="key key-letter">I</div>
+                <div class="key key-letter">O</div>
+                <div class="key key-letter">P</div>
+                <div class="key key-symbol">[</div>
+                <div class="key key-symbol">]</div>
+                <div class="key key-symbol">\</div>
+            </div>
+            
+            <!-- Row 3: Home row -->
+            <div class="keyboard-row">
+                <div class="key key-one-half-plus" data-key="CapsLock">Caps</div>
+                <div class="key key-letter">A</div>
+                <div class="key key-letter">S</div>
+                <div class="key key-letter">D</div>
+                <div class="key key-letter">F</div>
+                <div class="key key-letter">G</div>
+                <div class="key key-letter">H</div>
+                <div class="key key-letter">J</div>
+                <div class="key key-letter">K</div>
+                <div class="key key-letter">L</div>
+                <div class="key key-symbol">;</div>
+                <div class="key key-symbol">'</div>
+                <div class="key key-one-half-plus" data-key="Enter">Return</div>
+            </div>
+            
+            <!-- Row 4: Bottom letter row -->
+            <div class="keyboard-row">
+                <div class="key key-two" data-key="Shift">Shift</div>
+                <div class="key key-letter">Z</div>
+                <div class="key key-letter">X</div>
+                <div class="key key-letter">C</div>
+                <div class="key key-letter">V</div>
+                <div class="key key-letter">B</div>
+                <div class="key key-letter">N</div>
+                <div class="key key-letter">M</div>
+                <div class="key key-symbol">,</div>
+                <div class="key key-symbol">.</div>
+                <div class="key key-symbol">/</div>
+                <div class="key key-two" data-key="Shift">Shift</div>
+            </div>
+            
+            <!-- Row 5: Bottom row -->
+            <div class="keyboard-row">
+                <div class="key-spacer"></div>
+                <div class="key key-one-half" data-key="Meta">Cmd</div>
+                <div class="key key-spacebar" data-key=" ">Space</div>
+                <div class="key key-one-half" data-key="Meta">Cmd</div>
+                <div class="key-spacer"></div>
+            </div>
+        </div>
+
+        <div class="results" id="results" style="display: none;">
+            <h2>Game Over!</h2>
+            <p>Accuracy: <strong id="accuracy"></strong>%</p>
+            <p>Correct Keystrokes: <strong id="correctCount"></strong></p>
+            <p>Incorrect Keystrokes: <strong id="incorrectCount"></strong></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
