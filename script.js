@@ -1,3 +1,6 @@
+// Import text sets from external file
+import { wordSets, sentenceSets, paragraphSets } from './text-sets.js';
+
 const gameTypeSelect = document.getElementById('game-type');
 const difficultySelect = document.getElementById('difficulty');
 const durationSelect = document.getElementById('duration');
@@ -20,56 +23,6 @@ let startTime;
 let timerInterval;
 let gameDuration = 0;
 let typedText = '';
-
-// Sample data for different game modes
-const wordSets = {
-    easy: ['the', 'and', 'for', 'you', 'that', 'this', 'with', 'have', 'from', 'they', 
-           'what', 'were', 'when', 'your', 'which', 'their', 'will', 'would', 'about'],
-    medium: ['ability', 'absolute', 'academic', 'accurate', 'achieve', 'acknowledge', 'actually', 
-             'addition', 'adequate', 'advanced', 'afternoon', 'algorithm', 'although', 'analysis'],
-    hard: ['sophisticated', 'comprehensive', 'extraordinary', 'psychological', 'determination', 
-           'revolutionary', 'technological', 'environmental', 'representative', 'qualification', 
-           'collaboration', 'significance', 'professional', 'international', 'philosophical']
-};
-
-const sentenceSets = {
-    easy: [
-        'The sun is shining today.',
-        'I like to read books.',
-        'She plays the piano well.',
-        'They went to the beach.',
-        'We are going to the park.'
-    ],
-    medium: [
-        'The conference will be held next month in the city center.',
-        'They decided to renovate their house during the summer vacation.',
-        'Many students find mathematics to be challenging but rewarding.',
-        'The research team published their findings in a scientific journal.',
-        'Learning a new language requires consistent practice and dedication.'
-    ],
-    hard: [
-        'The intricate relationship between technological advancement and societal change is a subject of ongoing academic discourse.',
-        'Despite the overwhelming evidence supporting climate change, there remains significant political resistance to implementing meaningful policy changes.',
-        'Quantum computing promises to revolutionize data processing capabilities, potentially solving complex problems that are currently intractable.',
-        'The philosophical implications of artificial intelligence raise profound questions about consciousness, free will, and the nature of humanity itself.',
-        'Interdisciplinary collaboration between scientists, artists, and humanists can foster innovative approaches to addressing global challenges.'
-    ]
-};
-
-const paragraphSets = {
-    easy: [
-        'The small dog ran across the green field. It was a sunny day and the birds were singing. The dog was happy to be outside playing. Its owner watched from a bench nearby. The dog found a stick and brought it back. They played fetch for an hour before going home.',
-        'Sarah went to the store to buy some groceries. She needed milk, bread, and eggs. The store was not very crowded. She found everything on her list quickly. At the checkout, she realized she forgot her wallet. Luckily, they accepted mobile payments.'
-    ],
-    medium: [
-        'Technological innovation has transformed how we communicate in the modern world. Social media platforms allow instant connections across vast distances. However, this connectivity comes with challenges regarding privacy and information accuracy. Many experts suggest maintaining a healthy balance between digital and in-person interactions. As technology continues to evolve, we must adapt while preserving meaningful human relationships.',
-        'Climate change presents one of the most significant challenges of our time. Rising global temperatures have led to more frequent extreme weather events. Scientists emphasize the importance of reducing carbon emissions across all sectors of the economy. Renewable energy sources like solar and wind power offer promising alternatives to fossil fuels. Individual actions combined with policy changes will be necessary to address this complex issue effectively.'
-    ],
-    hard: [
-        'The intricate interplay between quantum mechanics and general relativity represents one of the most profound unsolved problems in theoretical physics. While quantum theory successfully describes the behaviour of particles at microscopic scales with remarkable precision, Einstein\'s theory of general relativity provides an elegant framework for understanding gravitational interactions at cosmic scales. The apparent incompatibility between these two foundational theories has motivated extensive research into quantum gravity, string theory, and other approaches that seek to unify our understanding of the fundamental forces that govern the universe. The resolution of this theoretical impasse could potentially revolutionise our conception of space, time, and the underlying nature of reality itself.',
-        'The development of artificial general intelligence (AGI) raises complex ethical considerations that span philosophical, social, and political domains. Unlike narrow AI systems designed for specific tasks, AGI would possess the capacity for human-level cognition across diverse contexts, potentially including self-awareness and autonomous goal-setting. This prospect necessitates careful deliberation regarding the implementation of robust safety protocols, the establishment of appropriate regulatory frameworks, and the equitable distribution of benefits and risks across society. Furthermore, the emergence of AGI would likely transform our understanding of consciousness, personhood, and the distinctive qualities that define humanity. Navigating this technological frontier requires unprecedented collaboration among scientists, ethicists, policymakers, and global stakeholders to ensure that advanced artificial intelligence systems align with human values and promote collective flourishing.'
-    ]
-};
 
 const keyMap = {
     "`": "~", "1": "!", "2": "@", "3": "#", "4": "$", "5": "%", "6": "^", "7": "&", "8": "*", "9": "(", "0": ")", "-": "_", "=": "+",
@@ -324,7 +277,11 @@ document.addEventListener('keydown', (event) => {
     }
 
     if (textIndex === currentText.length) {
-        endGame();
+        if (durationSelect.value === 'unlimited') {
+            continueUnlimitedGame();
+        } else {
+            endGame();
+        }
     }
 });
 
@@ -357,11 +314,13 @@ function startGame() {
     // Show the text in the typing area
     displayCurrentText();
 
-    if (duration !== 'free') {
+    if (duration !== 'free' && duration !== 'unlimited') {
         gameDuration = parseInt(duration);
         startTime = Date.now();
         updateTimer();
         timerInterval = setInterval(updateTimer, 1000);
+    } else if (duration === 'unlimited') {
+        timerDisplay.textContent = 'Unlimited Mode - Press ESC to stop';
     }
 }
 
@@ -369,6 +328,24 @@ function stopGame() {
     if (gameActive) {
         endGame();
     }
+}
+
+function continueUnlimitedGame() {
+    const gameType = gameTypeSelect.value;
+    const difficulty = difficultySelect.value;
+    
+    // Generate new text but keep the current score
+    currentText = generateText(gameType, difficulty);
+    
+    if (!currentText || currentText.length === 0) {
+        currentText = "The quick brown fox jumps over the lazy dog.";
+    }
+    
+    // Reset text index but keep keystroke counts for cumulative score
+    textIndex = 0;
+    
+    // Show the new text while maintaining the game state
+    displayCurrentText();
 }
 
 function updateTimer() {
@@ -397,3 +374,10 @@ function endGame() {
 
 startButton.addEventListener('click', startGame);
 stopButton.addEventListener('click', stopGame);
+
+// Add event listener for Escape key to stop the game
+document.addEventListener('keydown', (event) => {
+    if (gameActive && event.key === 'Escape') {
+        stopGame();
+    }
+});
